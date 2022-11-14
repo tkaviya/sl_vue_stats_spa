@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label>
                     Email address<br/><br/>
-                    <input type="email" class="form-control form-control-lg" v-model="login_email" />
+                    <input type="text" class="form-control form-control-lg" v-model="login_email" />
                 </label>
             </div>
             <br/>
@@ -17,30 +17,38 @@
                 </label>
             </div>
 
-            <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+            <button v-on:click="doLogin" class="btn btn-dark btn-lg btn-block">Sign In</button>
 
-            <p class="forgot-password text-right mt-2 mb-4">
-                <router-link to="/forgot-password">Forgot password ?</router-link>
-            </p>
-
-<!--            <div class="social-icons">-->
-<!--                <ul>-->
-<!--                    <li><a href="#"><i class="fa fa-google"></i></a></li>-->
-<!--                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>-->
-<!--                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>-->
-<!--                </ul>-->
-<!--            </div>-->
+            <br/>
+            <span class="forgot-password" style="float: left">
+                <router-link to="/">Register</router-link>
+            </span>
+            <span class="forgot-password text-right" style="float: right">
+                <router-link to="/forgot-password">Forgot password?</router-link>
+            </span>
 
         </form>
     </div>
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
+        name: "Login",
         data() {
             return {
                 login_email: '',
                 login_password: '',
+            }
+        },
+        methods: {
+            async doLogin() {
+                let result = await axios.post(
+                    'http://localhost:8080/api/auth/login',
+                    `{ "username": "${this.login_email}", "password": "${this.login_password}" }`,
+                    { headers: { 'Content-Type': 'application/json' } }
+                )
+                console.warn(result);
             }
         }
     }
